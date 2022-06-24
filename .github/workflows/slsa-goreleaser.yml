@@ -1,4 +1,4 @@
-name: SLSA go releaser
+name: SLSA-go-releaser
 on:
   workflow_dispatch:
 
