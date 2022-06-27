@@ -1,9 +1,10 @@
 name: image-build
 on:
-  push:
-    branches:
-      - 'main'
-      - 'release*'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - 'main'
+  #     - 'release*'
 
 permissions: 
   contents: read
