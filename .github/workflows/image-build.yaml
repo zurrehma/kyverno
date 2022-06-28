@@ -100,8 +100,18 @@ jobs:
       - name: get image digest
         run: |
           echo "digest is: $(make docker-get-initContainer-digest)"
-          echo "::set-output name=digest::$(make docker-get-initContainer-digest} | base64 -w0)"
+          echo "::set-output name=digest::$(make docker-get-initContainer-digest | base64 -w0)"
           echo "BASE64 digest is $(make docker-get-initContainer-digest | base64 -w0)"
+
+  provenance:
+    permissions:
+      id-token: write
+      contents: write
+      actions: read
+    needs: build
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    with:
+      base64-subjects: "${{ needs.build-init-kyverno.outputs.digest }}"
 
   build-kyverno:
     runs-on: ubuntu-latest
