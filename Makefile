@@ -83,6 +83,9 @@ docker-push-initContainer: docker-buildx-builder
 docker-get-initContainer-digest:
 	@docker buildx imagetools inspect --raw $(REPO)/$(INITC_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | openssl dgst -sha256 | sed 's/^.* //'
 
+docker-get-initContainer-sha256sum-digest:
+	@docker buildx imagetools inspect --raw $(REPO)/$(INITC_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | openssl dgst -sha256sum | sed 's/^.* //'
+
 docker-build-initContainer-local:
 	CGO_ENABLED=0 GOOS=linux go build -o $(PWD)/$(INITC_PATH)/kyvernopre -ldflags=$(LD_FLAGS_DEV) $(PWD)/$(INITC_PATH)
 	@docker build -f $(PWD)/$(INITC_PATH)/localDockerfile -t $(REPO)/$(INITC_IMAGE):$(IMAGE_TAG_DEV) $(PWD)/$(INITC_PATH)

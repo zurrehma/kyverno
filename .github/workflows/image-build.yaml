@@ -99,9 +99,9 @@ jobs:
 
       - name: get image digest
         run: |
-          echo "digest is: $(make docker-get-initContainer-digest)"
-          echo "::set-output name=digest::$(make docker-get-initContainer-digest | base64 -w0)"
-          echo "BASE64 digest is $(make docker-get-initContainer-digest | base64 -w0)"
+          echo "digest is: $(make docker-get-initContainer-sha256sum-digest)"
+          echo "::set-output name=digest::$(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
+          echo "BASE64 digest is $(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
 
   provenance:
     permissions:
