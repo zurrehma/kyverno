@@ -15,11 +15,11 @@ jobs:
       base64digest: ${{ steps.set-digest.outputs.digest }}
     steps:
       - name: get image digest
-          id: set-digest
-          run: |
-            echo "digest is: $(make ${{inputs.digest_command}})"
-            echo "::set-output name=digest::$(make ${{inputs.digest_command}} | base64 -w0)"
-            echo "BASE64 digest is $(make ${{inputs.digest_command}} | base64 -w0)"
+        id: set-digest
+        run: |
+          echo "digest is: $(make ${{inputs.digest_command}})"
+          echo "::set-output name=digest::$(make ${{inputs.digest_command}} | base64 -w0)"
+          echo "BASE64 digest is $(make ${{inputs.digest_command}} | base64 -w0)"
   generate-provenance:
     permissions:
       id-token: write # To sign the provenance.
