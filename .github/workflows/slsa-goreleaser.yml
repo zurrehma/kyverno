@@ -1,10 +1,10 @@
 name: SLSA-Generate-Provenance
 on:
   workflow_call:
-  inputs:
-    digest_command: 
-        required: true
-        type: string
+    inputs:
+      digest_command: 
+          required: true
+          type: string
 
 permissions: read-all
 
