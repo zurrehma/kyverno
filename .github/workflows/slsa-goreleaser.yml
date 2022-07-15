@@ -1,4 +1,5 @@
 name: SLSA-Generate-Provenance
+
 on:
   workflow_call:
     inputs:
