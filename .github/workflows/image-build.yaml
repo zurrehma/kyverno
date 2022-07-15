@@ -198,7 +198,7 @@ jobs:
           make docker-build-cli
 
   init-kyverno-provenance:
-    uses: zurrehma/kyverno/.github/workflows/slsa-goreleaser.yml@511085991ac0d3c1686aa9c5cc60aa5912fae3db
+    uses: zurrehma/kyverno/.github/workflows/slsa-goreleaser.yml
     with:
       digest_command: docker-get-initContainer-sha256sum-digest
     
