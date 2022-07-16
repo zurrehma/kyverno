@@ -136,6 +136,9 @@ docker-push-kyverno: docker-buildx-builder
 docker-get-kyverno-digest:
 	@docker buildx imagetools inspect --raw $(REPO)/$(KYVERNO_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | openssl dgst -sha256 | sed 's/^.* //'
 
+docker-get-kyverno-sha256sum-digest:
+	@docker buildx imagetools inspect --raw $(REPO)/$(KYVERNO_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | sha256sum
+
 docker-publish-kyverno-dev: docker-buildx-builder docker-push-kyverno-dev
 
 docker-push-kyverno-dev: docker-buildx-builder
@@ -193,6 +196,9 @@ docker-push-cli: docker-buildx-builder
 
 docker-get-cli-digest:
 	@docker buildx imagetools inspect --raw $(REPO)/$(KYVERNO_CLI_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | openssl dgst -sha256 | sed 's/^.* //'
+
+docker-get-cli-sha256sum-digest:
+	@docker buildx imagetools inspect --raw $(REPO)/$(KYVERNO_CLI_IMAGE):$(IMAGE_TAG) | perl -pe 'chomp if eof' | sha256sum
 
 docker-publish-cli-dev: docker-buildx-builder docker-push-cli-dev
 
