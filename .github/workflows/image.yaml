@@ -46,6 +46,7 @@ jobs:
       registry_password: ${{ secrets.CR_PAT }}
 
   get-digest:
+    needs: [push-init-kyverno, push-kyverno, push-kyverno-cli]
     outputs:
       init-kyverno-image-base64digest: ${{ steps.set-init-kyverno-digest.outputs.digest }}
       kyverno-image-base64digest: ${{ steps.set-kyverno-digest.outputs.digest }}
@@ -70,23 +71,24 @@ jobs:
           echo "::set-output name=digest::$(make docker-get-cli-sha256sum-digest | base64 -w0)"
           echo "BASE64 digest is $(make docker-get-cli-sha256sum-digest | base64 -w0)"
   generate-provenance:
+    needs: [push-init-kyverno, push-kyverno, push-kyverno-cli, get-digest]
     permissions:
       id-token: write # To sign the provenance.
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
     steps:
-    - name: init kyverno image provenance
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-      with:
-        base64-subjects: "${{ needs.get-digest.outputs.init-kyverno-image-base64digest }}"
+      - name: init kyverno image provenance
+        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+        with:
+          base64-subjects: "${{ needs.get-digest.outputs.init-kyverno-image-base64digest }}"
       - name: kyverno image provenance
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-      with:
-        base64-subjects: "${{ needs.get-digest.outputs.kyverno-image-base64digest }}"
+        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+        with:
+          base64-subjects: "${{ needs.get-digest.outputs.kyverno-image-base64digest }}"
       - name: kyverno cli image provenance
-      uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-      with:
-        base64-subjects: "${{ needs.get-digest.outputs.kyverno-cli-image-base64digest }}"
+        uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+        with:
+          base64-subjects: "${{ needs.get-digest.outputs.kyverno-cli-image-base64digest }}"
 
   
