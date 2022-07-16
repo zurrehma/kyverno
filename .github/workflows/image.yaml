@@ -45,31 +45,30 @@ jobs:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.CR_PAT }}
 
-  generate-provenance:
-    get-digest:
-      outputs:
-        init-kyverno-image-base64digest: ${{ steps.set-init-kyverno-digest.outputs.digest }}
-        kyverno-image-base64digest: ${{ steps.set-kyverno-digest.outputs.digest }}
-        kyverno-cli-image-base64digest: ${{ steps.set-cli-digest.outputs.digest }}
-      steps:
-        - name: get init kyverno image digest
-          id: set-init-kyverno-digest
-          run: |
-            echo "digest is: $(make docker-get-initContainer-sha256sum-digest)"
-            echo "::set-output name=digest::$(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
-            echo "BASE64 digest is $(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
-        - name: get kyverno image digest
-          id: set-kyverno-digest
-          run: |
-            echo "digest is: $(make docker-get-kyverno-sha256sum-digest)"
-            echo "::set-output name=digest::$(make docker-get-kyverno-sha256sum-digest | base64 -w0)"
-            echo "BASE64 digest is $(make docker-get-kyverno-sha256sum-digest | base64 -w0)"
-        - name: get cli image digest
-          id: set-cli-digest
-          run: |
-            echo "digest is: $(make docker-get-cli-sha256sum-digest)"
-            echo "::set-output name=digest::$(make docker-get-cli-sha256sum-digest | base64 -w0)"
-            echo "BASE64 digest is $(make docker-get-cli-sha256sum-digest | base64 -w0)"
+  get-digest:
+    outputs:
+      init-kyverno-image-base64digest: ${{ steps.set-init-kyverno-digest.outputs.digest }}
+      kyverno-image-base64digest: ${{ steps.set-kyverno-digest.outputs.digest }}
+      kyverno-cli-image-base64digest: ${{ steps.set-cli-digest.outputs.digest }}
+    steps:
+      - name: get init kyverno image digest
+        id: set-init-kyverno-digest
+        run: |
+          echo "digest is: $(make docker-get-initContainer-sha256sum-digest)"
+          echo "::set-output name=digest::$(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
+          echo "BASE64 digest is $(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
+      - name: get kyverno image digest
+        id: set-kyverno-digest
+        run: |
+          echo "digest is: $(make docker-get-kyverno-sha256sum-digest)"
+          echo "::set-output name=digest::$(make docker-get-kyverno-sha256sum-digest | base64 -w0)"
+          echo "BASE64 digest is $(make docker-get-kyverno-sha256sum-digest | base64 -w0)"
+      - name: get cli image digest
+        id: set-cli-digest
+        run: |
+          echo "digest is: $(make docker-get-cli-sha256sum-digest)"
+          echo "::set-output name=digest::$(make docker-get-cli-sha256sum-digest | base64 -w0)"
+          echo "BASE64 digest is $(make docker-get-cli-sha256sum-digest | base64 -w0)"
     generate-provenance:
       permissions:
         id-token: write # To sign the provenance.
