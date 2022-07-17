@@ -191,11 +191,11 @@ jobs:
         if: ${{inputs.tag == 'release' || (inputs.tag == 'image' && steps.check-branch.outputs.match == 'true')}}
         id: set-sha256sum-digest
         run: |
-          if [[ ${{inputs.digest_command}} = "docker-get-initContainer-sha256sum-digest"]]; then
+          if [[ ${{inputs.digest_command}} = "docker-get-initContainer-sha256sum-digest" ]]; then
             echo "digest is: $(make ${{inputs.digest_command}})"
             echo "::set-output name=init-container-digest::$(make ${{inputs.digest_command}} | base64 -w0)"
             echo "BASE64 digest is $(make ${{inputs.digest_command}} | base64 -w0)"
-          elif [[ ${{inputs.digest_command}} = "docker-get-kyverno-sha256sum-digest"]]; then
+          elif [[ ${{inputs.digest_command}} = "docker-get-kyverno-sha256sum-digest" ]]; then
             echo "digest is: $(make ${{inputs.digest_command}})"
             echo "::set-output name=kyverno-digest::$(make ${{inputs.digest_command}} | base64 -w0)"
             echo "BASE64 digest is $(make ${{inputs.digest_command}} | base64 -w0)"
