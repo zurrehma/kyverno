@@ -61,15 +61,15 @@ jobs:
         run: |
           echo "digest is: ${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
       
-      - name: get init kyverno image digest
+      - name: get kyverno image digest
         id: set-kyverno-digest
         run: |
-          echo "digest is: ${{ needs.push-init-kyverno.outputs.kyverno_sha256sum_digest }}"
+          echo "digest is: ${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
       
-      - name: get init kyverno image digest
+      - name: get kyverno cli image digest
         id: set-kyverno-cli-digest
         run: |
-          echo "digest is: ${{ needs.push-init-kyverno.outputs.cli_sha256sum_digest }}"
+          echo "digest is: ${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
 
   # get-digest:
   #   runs-on: ubuntu-latest
