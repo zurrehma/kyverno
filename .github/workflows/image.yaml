@@ -107,7 +107,7 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
     with:
       base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
-      attestation-name: init-kyverno.intoto.jsonl
+      attestation-name: "init-kyverno.intoto.jsonl"
 
   generate-kyverno-provenance:
     needs: push-kyverno
@@ -119,7 +119,7 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
     with:
       base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
-      attestation-name: kyverno.intoto.jsonl
+      attestation-name: "kyverno.intoto.jsonl"
 
   generate-kyverno-cli-provenance:
     needs: push-kyverno-cli
@@ -131,5 +131,5 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
     with:
       base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
-      attestation-name: kyverno-cli.intoto.jsonl
+      attestation-name: "kyverno-cli.intoto.jsonl"
   
