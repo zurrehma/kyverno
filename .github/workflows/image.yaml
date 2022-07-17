@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   push-init-kyverno:
-    uses: kyverno/kyverno/.github/workflows/reuse.yaml@release-1.8
+    uses: kyverno/kyverno/.github/workflows/reuse.yaml@74dde871a6b94ebb5d4ec2ca1d84d86fced6da46
     with:
       publish_command: docker-publish-initContainer
       digest_command: docker-get-initContainer-digest
