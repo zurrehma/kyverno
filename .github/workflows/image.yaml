@@ -97,37 +97,37 @@ jobs:
   #         echo "digest is: $(make docker-get-cli-sha256sum-digest)"
   #         echo "::set-output name=digest::$(make docker-get-cli-sha256sum-digest | base64 -w0)"
   #         echo "BASE64 digest is $(make docker-get-cli-sha256sum-digest | base64 -w0)"
-  # generate-init-kyverno-provenance:
-  #   needs: [push-init-kyverno, push-kyverno, push-kyverno-cli, get-digest]
-  #   permissions:
-  #     id-token: write # To sign the provenance.
-  #     contents: write # To upload assets to release.
-  #     actions: read #To read the workflow path.
-  #   # needs: args
-  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-  #   with:
-  #     base64-subjects: "${{ needs.get-digest.outputs.init-kyverno-image-base64digest }}"
+  generate-init-kyverno-provenance:
+    needs: push-init-kyverno
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    # needs: args
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    with:
+      base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
   
-  # generate-kyverno-provenance:
-  #   needs: [push-init-kyverno, push-kyverno, push-kyverno-cli, get-digest]
-  #   permissions:
-  #     id-token: write # To sign the provenance.
-  #     contents: write # To upload assets to release.
-  #     actions: read #To read the workflow path.
-  #   # needs: args
-  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-  #   with:
-  #     base64-subjects: "${{ needs.get-digest.outputs.kyverno-image-base64digest }}"
+  generate-kyverno-provenance:
+    needs: push-kyverno
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    # needs: args
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    with:
+      base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
 
-  # generate-kyverno-cli-provenance:
-  #   needs: [push-init-kyverno, push-kyverno, push-kyverno-cli, get-digest]
-  #   permissions:
-  #     id-token: write # To sign the provenance.
-  #     contents: write # To upload assets to release.
-  #     actions: read #To read the workflow path.
-  #   # needs: args
-  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-  #   with:
-  #     base64-subjects: "${{ needs.get-digest.outputs.kyverno-cli-image-base64digest }}"
+  generate-kyverno-cli-provenance:
+    needs: push-kyverno-cli
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    # needs: args
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    with:
+      base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
 
   
