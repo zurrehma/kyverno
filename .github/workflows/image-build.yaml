@@ -99,22 +99,22 @@ jobs:
         run: |
           make docker-build-initContainer
 
-      # - name: get image digest
-      #   id: set-digest
-      #   run: |
-      #     echo "digest is: $(make docker-get-initContainer-sha256sum-digest)"
-      #     echo "::set-output name=digest::$(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
-      #     echo "BASE64 digest is $(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
+      - name: get image digest
+        id: set-digest
+        run: |
+          echo "digest is: $(make docker-get-initContainer-sha256sum-digest)"
+          echo "::set-output name=digest::$(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
+          echo "BASE64 digest is $(make docker-get-initContainer-sha256sum-digest | base64 -w0)"
 
-  # provenance:
-  #   permissions:
-  #     id-token: write
-  #     contents: write
-  #     actions: read
-  #   needs: build-init-kyverno
-  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
-  #   with:
-  #     base64-subjects: "${{ needs.build-init-kyverno.outputs.base64digest }}"
+  provenance:
+    permissions:
+      id-token: write
+      contents: write
+      actions: read
+    needs: build-init-kyverno
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    with:
+      base64-subjects: "${{ needs.build-init-kyverno.outputs.base64digest }}"
 
   build-kyverno:
     runs-on: ubuntu-latest
@@ -197,8 +197,8 @@ jobs:
         run: |
           make docker-build-cli
 
-  init-kyverno-provenance:
-    uses: zurrehma/kyverno/.github/workflows/slsa-goreleaser.yml@41842b059971eda464d2f9a19a1dea6f30a6540b
-    with:
-      digest_command: docker-get-initContainer-sha256sum-digest
+  # init-kyverno-provenance:
+  #   uses: zurrehma/kyverno/.github/workflows/slsa-goreleaser.yml@41842b059971eda464d2f9a19a1dea6f30a6540b
+  #   with:
+  #     digest_command: docker-get-initContainer-sha256sum-digest
     
