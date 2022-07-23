@@ -104,9 +104,10 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
     with:
       base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
+      attestation-name: "init-kyverno.intoto.jsonl"
 
   generate-kyverno-provenance:
     needs: push-kyverno
@@ -115,10 +116,10 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
     with:
       base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
-
+      attestation-name: "kyverno.intoto.jsonl"
   generate-kyverno-cli-provenance:
     needs: push-kyverno-cli
     permissions:
@@ -126,7 +127,7 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.1.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
     with:
       base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
-  
+      attestation-name: "kyverno-cli.intoto.jsonl"
