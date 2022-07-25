@@ -16,17 +16,19 @@ jobs:
     with:
       publish_command: docker-publish-initContainer
       digest_command: docker-get-initContainer-digest
+      sha256sum_digest_command: docker-get-initContainer-sha256sum-digest
       image_name: kyvernopre
       tag: image
     secrets:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.CR_PAT }}
-
+      
   push-kyverno:
     uses: kyverno/kyverno/.github/workflows/reuse.yaml@main
     with:
       publish_command: docker-publish-kyverno
       digest_command: docker-get-kyverno-digest
+      sha256sum_digest_command: docker-get-kyverno-sha256sum-digest
       image_name: kyverno
       tag: image
     secrets:
@@ -38,8 +40,42 @@ jobs:
     with:
       publish_command: docker-publish-cli
       digest_command: docker-get-cli-digest
+      sha256sum_digest_command: docker-get-cli-sha256sum-digest
       image_name: kyverno-cli
       tag: image
     secrets:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.CR_PAT }}
+
+  generate-init-kyverno-provenance:
+    needs: push-init-kyverno
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    with:
+      base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
+      attestation-name: "init-kyverno.intoto.jsonl"
+
+  generate-kyverno-provenance:
+    needs: push-kyverno
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    with:
+      base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
+      attestation-name: "kyverno.intoto.jsonl"
+      
+  generate-kyverno-cli-provenance:
+    needs: push-kyverno-cli
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to release.
+      actions: read #To read the workflow path.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    with:
+      base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
+      attestation-name: "kyverno-cli.intoto.jsonl"
