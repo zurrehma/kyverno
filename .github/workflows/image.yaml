@@ -136,7 +136,7 @@ jobs:
     needs: push-init-kyverno
     permissions:
       id-token: write # To sign the provenance.
-      contents: write # To upload assets to release.
+      packages: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
@@ -153,7 +153,7 @@ jobs:
     needs: push-kyverno
     permissions:
       id-token: write # To sign the provenance.
-      contents: write # To upload assets to release.
+      packages: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
@@ -169,7 +169,7 @@ jobs:
     needs: push-kyverno-cli
     permissions:
       id-token: write # To sign the provenance.
-      contents: write # To upload assets to release.
+      packages: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
