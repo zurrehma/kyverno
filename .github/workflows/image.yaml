@@ -141,7 +141,7 @@ jobs:
     # needs: args
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
     with:
-      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+      image: ghcr.io/${{ github.repository_owner }}/kyvernopre
       digest: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
       registry-username: ${{ github.actor }}
     # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
@@ -158,7 +158,7 @@ jobs:
     # needs: args
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
     with:
-      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+      image: ghcr.io/${{ github.repository_owner }}/kyverno
       digest: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
       registry-username: ${{ github.actor }}
     # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
