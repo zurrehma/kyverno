@@ -194,16 +194,13 @@ jobs:
         id: set-sha256sum-digest
         run: |
           if [[ "${{inputs.sha256sum_digest_command}}" = "docker-get-initContainer-sha256sum-digest" ]]; then
-            echo "init container digest is: $(make ${{inputs.sha256sum_digest_command}})"
-            echo "::set-output name=init-container-digest::$(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
-            echo "BASE64 digest is $(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
+            echo "::set-output name=init-container-digest::sha256:${{ steps.get-step.outputs.digest }}"
+            echo "BASE64 digest is sha256:${{ steps.get-step.outputs.digest }}"
           elif [[ "${{inputs.sha256sum_digest_command}}" = "docker-get-kyverno-sha256sum-digest" ]]; then
-            echo "kyverno digest is: $(make ${{inputs.sha256sum_digest_command}})"
-            echo "::set-output name=kyverno-digest::$(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
-            echo "BASE64 digest is $(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
+            echo "::set-output name=kyverno-digest::sha256:${{ steps.get-step.outputs.digest }}"
+            echo "BASE64 digest is sha256:${{ steps.get-step.outputs.digest }}"
           else
-            echo "cli digest is: $(make ${{inputs.sha256sum_digest_command}})"
-            echo "::set-output name=cli-digest::$(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
-            echo "BASE64 digest is $(make ${{inputs.sha256sum_digest_command}} | base64 -w0)"
+            echo "::set-output name=cli-digest::sha256:${{ steps.get-step.outputs.digest }}"
+            echo "BASE64 digest is sha256:${{ steps.get-step.outputs.digest }}"
           fi
           

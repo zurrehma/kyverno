@@ -97,6 +97,41 @@ jobs:
   #         echo "digest is: $(make docker-get-cli-sha256sum-digest)"
   #         echo "::set-output name=digest::$(make docker-get-cli-sha256sum-digest | base64 -w0)"
   #         echo "BASE64 digest is $(make docker-get-cli-sha256sum-digest | base64 -w0)"
+  # generate-init-kyverno-provenance:
+  #   needs: push-init-kyverno
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     contents: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+  #   with:
+  #     base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
+  #     attestation-name: "init-kyverno.intoto.jsonl"
+
+  # generate-kyverno-provenance:
+  #   needs: push-kyverno
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     contents: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+  #   with:
+  #     base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
+  #     attestation-name: "kyverno.intoto.jsonl"
+  # generate-kyverno-cli-provenance:
+  #   needs: push-kyverno-cli
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     contents: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+  #   with:
+  #     base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
+  #     attestation-name: "kyverno-cli.intoto.jsonl"
+
   generate-init-kyverno-provenance:
     needs: push-init-kyverno
     permissions:
@@ -104,10 +139,15 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
     with:
-      base64-subjects: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
-      attestation-name: "init-kyverno.intoto.jsonl"
+      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+      digest: "${{ needs.push-init-kyverno.outputs.init_sha256sum_digest }}"
+      registry-username: ${{ github.actor }}
+    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+      compile-generator: true
+    secrets:
+      registry-password: ${{ secrets.CR_PAT }}
 
   generate-kyverno-provenance:
     needs: push-kyverno
@@ -116,10 +156,15 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
     with:
-      base64-subjects: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
-      attestation-name: "kyverno.intoto.jsonl"
+      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+      digest: "${{ needs.push-kyverno.outputs.kyverno_sha256sum_digest }}"
+      registry-username: ${{ github.actor }}
+    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+      compile-generator: true
+    secrets:
+      registry-password: ${{ secrets.CR_PAT }}
   generate-kyverno-cli-provenance:
     needs: push-kyverno-cli
     permissions:
@@ -127,7 +172,12 @@ jobs:
       contents: write # To upload assets to release.
       actions: read #To read the workflow path.
     # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
     with:
-      base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
-      attestation-name: "kyverno-cli.intoto.jsonl"
+      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+      digest: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
+      registry-username: ${{ github.actor }}
+    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+      compile-generator: true
+    secrets:
+      registry-password: ${{ secrets.CR_PAT }}
