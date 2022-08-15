@@ -17,7 +17,6 @@ jobs:
     with:
       publish_command: docker-publish-initContainer
       digest_command: docker-get-initContainer-digest
-      sha256sum_digest_command: docker-get-initContainer-sha256sum-digest
       image_name: kyvernopre
       tag: image
     secrets:
@@ -29,7 +28,6 @@ jobs:
     with:
       publish_command: docker-publish-kyverno
       digest_command: docker-get-kyverno-digest
-      sha256sum_digest_command: docker-get-kyverno-sha256sum-digest
       image_name: kyverno
       tag: image
     secrets:
@@ -41,7 +39,6 @@ jobs:
     with:
       publish_command: docker-publish-cli
       digest_command: docker-get-cli-digest
-      sha256sum_digest_command: docker-get-cli-sha256sum-digest
       image_name: kyverno-cli
       tag: image
     secrets:
