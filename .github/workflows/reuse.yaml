@@ -9,9 +9,6 @@ on:
       digest_command: 
         required: true
         type: string
-      sha256sum_digest_command: 
-        required: true
-        type: string
       image_name: 
         required: true
         type: string
@@ -26,14 +23,14 @@ on:
       registry_password:
         required: true
     outputs:
-      init_sha256sum_digest:
-        description: "sha256sum digest of docker image"
+      init_sha256_digest:
+        description: "sha256 digest of docker image"
         value: ${{ jobs.build.outputs.init-container-digest }}
-      kyverno_sha256sum_digest:
-        description: "sha256sum digest of docker image"
+      kyverno_sha256_digest:
+        description: "sha256 digest of docker image"
         value: ${{ jobs.build.outputs.kyverno-digest }}
-      cli_sha256sum_digest:
-        description: "sha256sum digest of docker image"
+      cli_sha256_digest:
+        description: "sha256 digest of docker image"
         value: ${{ jobs.build.outputs.cli-digest }}
 
 jobs:
@@ -193,10 +190,10 @@ jobs:
         if: ${{inputs.tag == 'release' || (inputs.tag == 'image' && steps.check-branch.outputs.match == 'true')}}
         id: set-sha256sum-digest
         run: |
-          if [[ "${{inputs.sha256sum_digest_command}}" = "docker-get-initContainer-sha256sum-digest" ]]; then
+          if [[ "${{inputs.digest_command}}" = "docker-get-initContainer-digest" ]]; then
             echo "::set-output name=init-container-digest::sha256:${{ steps.get-step.outputs.digest }}"
             echo "BASE64 digest is sha256:${{ steps.get-step.outputs.digest }}"
-          elif [[ "${{inputs.sha256sum_digest_command}}" = "docker-get-kyverno-sha256sum-digest" ]]; then
+          elif [[ "${{inputs.digest_command}}" = "docker-get-kyverno-digest" ]]; then
             echo "::set-output name=kyverno-digest::sha256:${{ steps.get-step.outputs.digest }}"
             echo "BASE64 digest is sha256:${{ steps.get-step.outputs.digest }}"
           else
