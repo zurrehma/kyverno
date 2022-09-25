@@ -11,7 +11,7 @@ GIT_HASH             := $(GIT_BRANCH)/$(shell git log -1 --pretty=format:"%H")
 TIMESTAMP            := $(shell date '+%Y-%m-%d_%I:%M:%S%p')
 VERSION              ?= $(shell git describe --match "v[0-9]*")
 REGISTRY             ?= ghcr.io
-REPO                  = $(REGISTRY)/kyverno
+REPO                  = $(REGISTRY)/zurrehma
 IMAGE_TAG_LATEST_DEV  = $(shell git describe --match "[0-9].[0-9]-dev*" | cut -d '-' -f-2)
 IMAGE_TAG_DEV         = $(GIT_VERSION_DEV)
 IMAGE_TAG            ?= $(GIT_VERSION)
