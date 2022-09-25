@@ -15,8 +15,7 @@ jobs:
   push-init-kyverno:
     uses: zurrehma/kyverno/.github/workflows/reuse.yaml@release-1.8
     with:
-      publish_command: docker-publish-initContainer
-      digest_command: docker-get-initContainer-digest
+      publish_command: ko-publish-kyvernopre
       image_name: kyvernopre
       tag: image
     secrets:
@@ -26,8 +25,7 @@ jobs:
   push-kyverno:
     uses: zurrehma/kyverno/.github/workflows/reuse.yaml@release-1.8
     with:
-      publish_command: docker-publish-kyverno
-      digest_command: docker-get-kyverno-digest
+      publish_command: ko-publish-kyverno
       image_name: kyverno
       tag: image
     secrets:
@@ -37,36 +35,35 @@ jobs:
   push-kyverno-cli:
     uses: zurrehma/kyverno/.github/workflows/reuse.yaml@release-1.8
     with:
-      publish_command: docker-publish-cli
-      digest_command: docker-get-cli-digest
+      publish_command: ko-publish-cli
       image_name: kyverno-cli
       tag: image
     secrets:
       registry_username: ${{ github.actor }}
       registry_password: ${{ secrets.CR_PAT }}
 
-  get-digest:
-    runs-on: ubuntu-latest
-    needs: [push-init-kyverno, push-kyverno, push-kyverno-cli]
-    # outputs:
-    #   init-kyverno-image-base64digest: ${{ steps.set-init-kyverno-digest.outputs.digest }}
-    #   kyverno-image-base64digest: ${{ steps.set-kyverno-digest.outputs.digest }}
-    #   kyverno-cli-image-base64digest: ${{ steps.set-cli-digest.outputs.digest }}
-    steps:
-      - name: get init kyverno image digest
-        id: set-init-kyverno-digest
-        run: |
-          echo "digest is: ${{ needs.push-init-kyverno.outputs.init_sha256_digest }}"
+  # get-digest:
+  #   runs-on: ubuntu-latest
+  #   needs: [push-init-kyverno, push-kyverno, push-kyverno-cli]
+  #   # outputs:
+  #   #   init-kyverno-image-base64digest: ${{ steps.set-init-kyverno-digest.outputs.digest }}
+  #   #   kyverno-image-base64digest: ${{ steps.set-kyverno-digest.outputs.digest }}
+  #   #   kyverno-cli-image-base64digest: ${{ steps.set-cli-digest.outputs.digest }}
+  #   steps:
+  #     - name: get init kyverno image digest
+  #       id: set-init-kyverno-digest
+  #       run: |
+  #         echo "digest is: ${{ needs.push-init-kyverno.outputs.init_sha256_digest }}"
       
-      - name: get kyverno image digest
-        id: set-kyverno-digest
-        run: |
-          echo "digest is: ${{ needs.push-kyverno.outputs.kyverno_sha256_digest }}"
+  #     - name: get kyverno image digest
+  #       id: set-kyverno-digest
+  #       run: |
+  #         echo "digest is: ${{ needs.push-kyverno.outputs.kyverno_sha256_digest }}"
       
-      - name: get kyverno cli image digest
-        id: set-kyverno-cli-digest
-        run: |
-          echo "digest is: ${{ needs.push-kyverno-cli.outputs.cli_sha256_digest }}"
+  #     - name: get kyverno cli image digest
+  #       id: set-kyverno-cli-digest
+  #       run: |
+  #         echo "digest is: ${{ needs.push-kyverno-cli.outputs.cli_sha256_digest }}"
 
   # get-digest:
   #   runs-on: ubuntu-latest
@@ -129,52 +126,52 @@ jobs:
   #     base64-subjects: "${{ needs.push-kyverno-cli.outputs.cli_sha256sum_digest }}"
   #     attestation-name: "kyverno-cli.intoto.jsonl"
 
-  generate-init-kyverno-provenance:
-    needs: push-init-kyverno
-    permissions:
-      id-token: write # To sign the provenance.
-      packages: write # To upload assets to release.
-      actions: read #To read the workflow path.
-    # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
-    with:
-      image: ghcr.io/${{ github.repository_owner }}/kyvernopre
-      digest: "${{ needs.push-init-kyverno.outputs.init_sha256_digest }}"
-      registry-username: ${{ github.actor }}
-    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
-      compile-generator: true
-    secrets:
-      registry-password: ${{ secrets.CR_PAT }}
+  # generate-init-kyverno-provenance:
+  #   needs: push-init-kyverno
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     packages: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
+  #   with:
+  #     image: ghcr.io/${{ github.repository_owner }}/kyvernopre
+  #     digest: "${{ needs.push-init-kyverno.outputs.init_sha256_digest }}"
+  #     registry-username: ${{ github.actor }}
+  #   # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+  #     compile-generator: true
+  #   secrets:
+  #     registry-password: ${{ secrets.CR_PAT }}
 
-  generate-kyverno-provenance:
-    needs: push-kyverno
-    permissions:
-      id-token: write # To sign the provenance.
-      packages: write # To upload assets to release.
-      actions: read #To read the workflow path.
-    # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
-    with:
-      image: ghcr.io/${{ github.repository_owner }}/kyverno
-      digest: "${{ needs.push-kyverno.outputs.kyverno_sha256_digest }}"
-      registry-username: ${{ github.actor }}
-    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
-      compile-generator: true
-    secrets:
-      registry-password: ${{ secrets.CR_PAT }}
-  generate-kyverno-cli-provenance:
-    needs: push-kyverno-cli
-    permissions:
-      id-token: write # To sign the provenance.
-      packages: write # To upload assets to release.
-      actions: read #To read the workflow path.
-    # needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
-    with:
-      image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
-      digest: "${{ needs.push-kyverno-cli.outputs.cli_sha256_digest }}"
-      registry-username: ${{ github.actor }}
-    # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
-      compile-generator: true
-    secrets:
-      registry-password: ${{ secrets.CR_PAT }}
+  # generate-kyverno-provenance:
+  #   needs: push-kyverno
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     packages: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
+  #   with:
+  #     image: ghcr.io/${{ github.repository_owner }}/kyverno
+  #     digest: "${{ needs.push-kyverno.outputs.kyverno_sha256_digest }}"
+  #     registry-username: ${{ github.actor }}
+  #   # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+  #     compile-generator: true
+  #   secrets:
+  #     registry-password: ${{ secrets.CR_PAT }}
+  # generate-kyverno-cli-provenance:
+  #   needs: push-kyverno-cli
+  #   permissions:
+  #     id-token: write # To sign the provenance.
+  #     packages: write # To upload assets to release.
+  #     actions: read #To read the workflow path.
+  #   # needs: args
+  #   uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@main
+  #   with:
+  #     image: ghcr.io/${{ github.repository_owner }}/kyverno-cli
+  #     digest: "${{ needs.push-kyverno-cli.outputs.cli_sha256_digest }}"
+  #     registry-username: ${{ github.actor }}
+  #   # TODO(https://github.com/slsa-framework/slsa-github-generator/issues/492): Remove after GA release.
+  #     compile-generator: true
+  #   secrets:
+  #     registry-password: ${{ secrets.CR_PAT }}
