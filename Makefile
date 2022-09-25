@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-.DEFAULT_GOAL: build
-
-##################################
-# DEFAULTS
-##################################
-
-GIT_VERSION := $(shell git describe --match "v[0-9]*" --tags $(git rev-list --tags --max-count=1))
-GIT_VERSION_DEV := $(shell git describe --match "[0-9].[0-9]-dev*")
-GIT_BRANCH := $(shell git branch | grep \* | cut -d ' ' -f2)
-GIT_HASH := $(GIT_BRANCH)/$(shell git log -1 --pretty=format:"%H")
-TIMESTAMP := $(shell date '+%Y-%m-%d_%I:%M:%S%p')
-CONTROLLER_GEN=controller-gen
-CONTROLLER_GEN_REQ_VERSION := v0.8.0
-VERSION ?= $(shell git describe --match "v[0-9]*")
-
-REGISTRY?=ghcr.io
-REPO=$(REGISTRY)/zurrehma
-IMAGE_TAG_LATEST_DEV=$(shell git describe --match "[0-9].[0-9]-dev*" | cut -d '-' -f-2)
-IMAGE_TAG_DEV=$(GIT_VERSION_DEV)
-IMAGE_TAG?=$(GIT_VERSION)
-GOOS ?= $(shell go env GOOS)
-=======
 .DEFAULT_GOAL: build-all
 
 ############
@@ -73,7 +50,6 @@ HELM_DOCS_VERSION                  := v1.11.0
 KO                                 := $(TOOLS_DIR)/ko
 KO_VERSION                         := main #e93dbee8540f28c45ec9a2b8aec5ef8e43123966
 TOOLS                              := $(KIND) $(CONTROLLER_GEN) $(CLIENT_GEN) $(LISTER_GEN) $(INFORMER_GEN) $(GEN_CRD_API_REFERENCE_DOCS) $(GO_ACC) $(KUSTOMIZE) $(GOIMPORTS) $(HELM_DOCS) $(KO)
->>>>>>> upstream/main
 ifeq ($(GOOS), darwin)
 SED                                := gsed
 else
